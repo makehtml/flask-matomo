@@ -9,3 +9,4 @@ twine upload dist/*
 
 # Clean dist/
 rm -rf dist/*
+rm -rf Flask_Matomo_D.egg-info/*
