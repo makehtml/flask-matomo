@@ -8,7 +8,7 @@ except (IOError, ImportError):
 
 setup(
     name="Flask-Matomo-D",
-    version="0.0.2",
+    version="0.0.3",
     url="https://github.com/firefresh/flask-matomo-d",
     license="",
     author="Demetrio Dowbnac",

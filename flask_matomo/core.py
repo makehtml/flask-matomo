@@ -21,9 +21,12 @@ class Matomo(object):
         id_site (int): id of the site that should be tracked on Matomo
         token_auth (str): token that can be found in the area API in the settings of Matomo
         base_url (str): url to the site that should be tracked
+        secure (boolean): verification of trusted certificates
+        allowed_paths (str): allowed paths of every incoming request to be tracked, use regex sintax. Ex: 'dasd|paht1|admin'
+        custom_action_name_by_path (dict): dictionary of custom action_name indentified by path witch is used for match referenced request.path
     """
 
-    def __init__(self, app=None, matomo_url=None, id_site=None, token_auth=None, base_url=None, secure=True, allowed_paths=None):
+    def __init__(self, app=None, matomo_url=None, id_site=None, token_auth=None, base_url=None, secure=True, allowed_paths=None, custom_action_name_by_path=None):
         self.app = app
         self.matomo_url = matomo_url
         self.id_site = id_site
@@ -33,6 +36,7 @@ class Matomo(object):
         self.ignored_routes = []
         self.allowed_paths = allowed_paths
         self.routes_details = {}
+        self.custom_action_name_by_path = custom_action_name_by_path
 
         if not matomo_url:
             raise ValueError("matomo_url has to be set")
@@ -42,6 +46,8 @@ class Matomo(object):
             raise ValueError('secure has to be a bool')
         if allowed_paths and type(allowed_paths) != str:
             raise ValueError('allowed_paths has to be a string, ex: "path1|pahtz|etc|admin"')
+        if custom_action_name_by_path and type(custom_action_name_by_path) != dict:
+            raise ValueError("custom_action_name_by_path has to be a dict, ex: {'path': 'custom name for it'}")
         if app is not None:
             self.init_app(app)
 
@@ -83,6 +89,12 @@ class Matomo(object):
         if self.routes_details.get(action_name) and self.routes_details.get(action_name).get("action_name"):
             keyword_arguments["action_name"] = self.routes_details.get(
                 action_name).get("action_name")
+
+        # Set custom actiom name by path
+        if self.custom_action_name_by_path:
+            action_name = self.set_custom_action_name()
+            if action_name:
+                keyword_arguments["action_name"] = action_name
 
         # Create new thread with request, because otherwise the original request will be blocked
         Thread(target=self.track, kwargs=keyword_arguments).start()
@@ -164,7 +176,16 @@ class Matomo(object):
 
             self.allowed_paths (str): 'path1|pathz|etc'
         """
-        if re.search(self.allowed_paths, str(request.path)):
+        if re.search(self.allowed_paths, request.path):
             return True
         else:
             return False
+
+    def set_custom_action_name(self):
+        """ Return custom action_name if request.path contain any element of custom_action_name_by_path
+
+            self.custom_action_name_by_path (dict) : {'path': 'custom name for it'}
+        """
+        for p in self.custom_action_name_by_path:
+            if p in request.path:
+                return self.custom_action_name_by_path[p]

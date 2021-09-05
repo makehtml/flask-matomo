@@ -23,7 +23,8 @@ matomo = Matomo(app,
                 id_site=5,
                 token_auth="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 secure=True,
-                allowed_paths=None)
+                allowed_paths=None,
+                custom_action_name_by_path=None)
 
 @app.route("/")
 def index():
@@ -41,6 +42,17 @@ In the code above:
 4. The *token_auth* parameter can be found in the area API in the settings of Matomo. It is required for tracking the ip address.
 5. The *secure* parameter indicates whether the verification of trusted certificates is performed, by default is True.
 6. The *allowed_paths* indicates allowed paths of every incoming request to be tracked, use regex sintax. Ex: 'dasd|paht1|admin'
+7. The *custom_action_name_by_path* parameter set custom action_name identifying a part of the String that contains the Request.path. Ex:
+  url: `http://www.example.com/myapplication/generic/page.html?x=y`
+  Request.path: `/generic/page.html`
+
+  custom_action_name_by_path = {'generic': 'Generic Action in Etc'}
+
+  Every requests that contain "generic" in their url path will have their default action_name modified, which is the name of the method invoked in Flask, by the value of the key that was identified. For more info read [tracking-api](https://developer.matomo.org/api-reference/tracking-api)
+
+# Docs
+  Matomo [tracking-api](https://developer.matomo.org/api-reference/tracking-api)
+  Flask [api](https://tedboy.github.io/flask/index.html)
 
 ## Meta
 
