@@ -176,7 +176,7 @@ class Matomo(object):
 
             self.allowed_paths (str): 'path1|pathz|etc'
         """
-        if re.search(self.allowed_paths, request.path):
+        if re.search(self.allowed_paths, request.full_path):
             return True
         else:
             return False
@@ -187,5 +187,5 @@ class Matomo(object):
             self.custom_action_name_by_path (dict) : {'path': 'custom name for it'}
         """
         for p in self.custom_action_name_by_path:
-            if p in request.path:
+            if p in request.full_path:
                 return self.custom_action_name_by_path[p]
