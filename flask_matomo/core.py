@@ -56,7 +56,7 @@ class Matomo(object):
             return
         if any(
             ua_substring in str(request.user_agent)
-            for ua_substring in self.ignored_ua_substring
+            for ua_substring in self.ignored_ua_substrings
         ):
             return
 
