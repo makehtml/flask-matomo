@@ -30,6 +30,7 @@ class Matomo(object):
         self.base_url = base_url.strip("/") if base_url else base_url
         self.ignored_routes = []
         self.ignored_ua_prefixes = []
+        self.ignored_ua_substrings = []
         self.routes_details = {}
 
         if not matomo_url:
@@ -51,6 +52,11 @@ class Matomo(object):
         if any(
             str(request.user_agent).startswith(ua_prefix)
             for ua_prefix in self.ignored_ua_prefixes
+        ):
+            return
+        if any(
+            ua_substring in str(request.user_agent)
+            for ua_substring in self.ignored_ua_substring
         ):
             return
 
