@@ -29,6 +29,7 @@ class Matomo(object):
         self.token_auth = token_auth
         self.base_url = base_url.strip("/") if base_url else base_url
         self.ignored_routes = []
+        self.ignored_url_substrings = []
         self.ignored_ua_prefixes = []
         self.ignored_ua_substrings = []
         self.routes_details = {}
@@ -57,6 +58,11 @@ class Matomo(object):
         if any(
             ua_substring in str(request.user_agent)
             for ua_substring in self.ignored_ua_substrings
+        ):
+            return
+        if any(
+            url_substring in str(request.url)
+            for url_substring in self.ignored_url_substrings
         ):
             return
 
