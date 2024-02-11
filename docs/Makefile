@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = Flask-Matomo
+SPHINXPROJ    = flask-matomo2
 SOURCEDIR     = source
 BUILDDIR      = build
 

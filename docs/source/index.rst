@@ -1,7 +1,7 @@
-Welcome to Flask-Matomo
+Welcome to flask-matomo2
 ========================================
 
-Flask-Matomo is a library which lets you track the requests of your Flask website using Matomo (Piwik).
+`flask-matomo2` is a library which lets you track the requests of your Flask website using Matomo (Piwik).
 
 Table Of Contents
 -----------------
